@@ -1,0 +1,14 @@
+{
+  "id": 123,
+  "score": 3.4,
+  "email": "kingson@example.org",
+  "null": null,
+  "followers": [
+    {
+      "username": "pfefferkuchenmann & <co>"
+    },
+    {
+      "username": "lululu"
+    }
+  ]
+}

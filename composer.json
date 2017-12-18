@@ -1,0 +1,32 @@
+{
+    "name": "kingson-de/marshal-json-serializer",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "KingsonDe\\Marshal\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "KingsonDe\\Marshal\\": "tests"
+        }
+    },
+    "require": {
+        "kingson-de/marshal-serializer": "^1.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.5"
+    },
+    "license": "Apache License",
+    "authors": [
+        {
+            "name": "Martin Ossowski",
+            "email": "martin.ossowski@googlemail.com"
+        }
+    ],
+    "scripts": {
+        "test": "phpunit",
+        "test-dbg": "phpdbg -qrr vendor/phpunit/phpunit/phpunit",
+        "quicktest": "phpunit --no-coverage"
+    }
+}
