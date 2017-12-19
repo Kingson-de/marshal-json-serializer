@@ -23,6 +23,25 @@ class MarshalJsonTest extends TestCase {
         $this->assertJsonStringEqualsJsonFile(__DIR__ . '/Fixtures/UserEscaped.json', $json);
     }
 
+    public function testBuildDataStructureIsNull() {
+        $json = MarshalJson::serializeItemCallable(function () {
+            return null;
+        });
+
+        $this->assertJsonStringEqualsJsonString('{}', $json);
+    }
+
+    /**
+     * @expectedException \KingsonDe\Marshal\Exception\JsonSerializeException
+     */
+    public function testSerializationFailed() {
+        MarshalJson::serializeItemCallable(function () {
+            return [
+                'malformedJson' => "\xB1\x31",
+            ];
+        });
+    }
+
     public function mapUser(\stdClass $user) {
         return [
             'id'        => $user->id,
@@ -38,10 +57,10 @@ class MarshalJsonTest extends TestCase {
     }
 
     private function createUser() {
-        $user        = new \stdClass();
-        $user->id    = 123;
-        $user->score = 3.4;
-        $user->email = 'kingson@example.org';
+        $user            = new \stdClass();
+        $user->id        = 123;
+        $user->score     = 3.4;
+        $user->email     = 'kingson@example.org';
         $user->followers = ['pfefferkuchenmann & <co>', 'lululu'];
 
         return $user;

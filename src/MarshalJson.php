@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace KingsonDe\Marshal;
 
 use KingsonDe\Marshal\Data\DataStructure;
+use KingsonDe\Marshal\Exception\JsonSerializeException;
 
 /**
  * @method static string serializeItem(AbstractMapper $mapper, ...$data)
@@ -17,7 +18,7 @@ class MarshalJson extends Marshal {
     /**
      * @var int
      */
-    private static $encodingOptions = 0;
+    protected static $encodingOptions = 0;
 
     /**
      * @param int $encodingOptions
@@ -32,9 +33,21 @@ class MarshalJson extends Marshal {
      * @return string
      */
     public static function serialize(DataStructure $dataStructure) {
-        return json_encode(
+        $data = static::buildDataStructure($dataStructure);
+
+        if (null === $data) {
+            return '{}';
+        }
+
+        $json = json_encode(
             static::buildDataStructure($dataStructure),
             static::$encodingOptions
         );
+
+        if (false === $json) {
+            throw new JsonSerializeException(json_last_error_msg());
+        }
+
+        return $json;
     }
 }
