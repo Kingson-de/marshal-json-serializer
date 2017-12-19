@@ -40,7 +40,7 @@ class MarshalJson extends Marshal {
         }
 
         $json = json_encode(
-            static::buildDataStructure($dataStructure),
+            $data,
             static::$encodingOptions
         );
 
