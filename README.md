@@ -74,3 +74,7 @@ $json = MarshalJson::serializeCollectionCallable(function (User $user) {
     ];
 }, $userCollection);
 ```
+
+## License
+
+This project is released under the terms of the [Apache 2.0 license](https://github.com/Kingson-de/marshal-json-serializer/blob/master/LICENSE).
