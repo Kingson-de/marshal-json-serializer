@@ -31,6 +31,7 @@ class MarshalJson extends Marshal {
     /**
      * @param DataStructure $dataStructure
      * @return string
+     * @throws \KingsonDe\Marshal\Exception\JsonSerializeException
      */
     public static function serialize(DataStructure $dataStructure) {
         $data = static::buildDataStructure($dataStructure);
