@@ -1,5 +1,6 @@
 {
     "name": "kingson-de/marshal-json-serializer",
+    "description": "Translates data structures to JSON.",
     "type": "library",
     "license": "Apache License",
     "authors": [
