@@ -1,6 +1,7 @@
 {
     "name": "kingson-de/marshal-json-serializer",
-    "description": "Translates data structures to JSON.",
+    "description": "Marshal JSON Serializer will directly serialize the data to JSON, it is built on top of the Marshal Serializer.",
+    "keywords": ["serializer","marshalling","serialization","marshal","mappers","json"],
     "type": "library",
     "license": "Apache License",
     "authors": [
