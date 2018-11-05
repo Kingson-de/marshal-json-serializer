@@ -5,6 +5,10 @@ declare(strict_types = 1);
 namespace KingsonDe\Marshal;
 
 use KingsonDe\Marshal\Data\CollectionCallable;
+use KingsonDe\Marshal\Data\FlexibleData;
+use KingsonDe\Marshal\Example\Mapper\UserMapper;
+use KingsonDe\Marshal\Example\Model\User;
+use KingsonDe\Marshal\Example\ObjectMapper\UserIdMapper;
 use PHPUnit\Framework\TestCase;
 
 class MarshalJsonTest extends TestCase {
@@ -23,12 +27,13 @@ class MarshalJsonTest extends TestCase {
         $this->assertJsonStringEqualsJsonFile(__DIR__ . '/Fixtures/UserEscaped.json', $json);
     }
 
+    /**
+     * @expectedException \KingsonDe\Marshal\Exception\JsonSerializeException
+     */
     public function testBuildDataStructureIsNull() {
-        $json = MarshalJson::serializeItemCallable(function () {
+        MarshalJson::serializeItemCallable(function () {
             return null;
         });
-
-        $this->assertJsonStringEqualsJsonString('{}', $json);
     }
 
     /**
@@ -40,6 +45,51 @@ class MarshalJsonTest extends TestCase {
                 'malformedJson' => "\xB1\x31",
             ];
         });
+    }
+
+    public function testDeserializeMapperGeneratedJson() {
+        $json = MarshalJson::serializeItem(new UserMapper(), new User(123, 'kingson@example.org'));
+
+        $flexibleData = new FlexibleData(MarshalJson::deserializeJsonToData($json));
+
+        $newJson = MarshalJson::serialize($flexibleData);
+
+        $this->assertJsonStringEqualsJsonString($json, $newJson);
+    }
+
+    public function testDeserializeJsonFile() {
+        $json = file_get_contents(__DIR__ . '/Fixtures/User.json');
+
+        $flexibleData = new FlexibleData(MarshalJson::deserializeJsonToData($json));
+
+        $newJson = MarshalJson::serialize($flexibleData);
+
+        $this->assertJsonStringEqualsJsonString($json, $newJson);
+    }
+
+    public function testDeserializeToInt() {
+        $json = file_get_contents(__DIR__ . '/Fixtures/User.json');
+
+        $id = MarshalJson::deserializeJson($json, new UserIdMapper());
+
+        $this->assertSame(123, $id);
+    }
+
+    public function testDeserializeWithCallable() {
+        $json = file_get_contents(__DIR__ . '/Fixtures/User.json');
+
+        $id = MarshalJson::deserializeJsonCallable($json, function (FlexibleData $flexibleData) {
+            return $flexibleData['id'];
+        });
+
+        $this->assertSame(123, $id);
+    }
+
+    /**
+     * @expectedException \KingsonDe\Marshal\Exception\JsonDeserializeException
+     */
+    public function testDeserializeInvalidXml() {
+        MarshalJson::deserializeJsonToData('{not=valid}');
     }
 
     public function mapUser(\stdClass $user) {
