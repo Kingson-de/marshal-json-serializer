@@ -88,8 +88,21 @@ class MarshalJsonTest extends TestCase {
     /**
      * @expectedException \KingsonDe\Marshal\Exception\JsonDeserializeException
      */
-    public function testDeserializeInvalidXml() {
+    public function testDeserializeInvalidJson() {
         MarshalJson::deserializeJsonToData('{not=valid}');
+    }
+
+    public function testModifyExistingJson() {
+        $json = '{"name": "John Doe"}';
+
+        $flexibleData = new FlexibleData(MarshalJson::deserializeJsonToData($json));
+        $flexibleData['name'] = 'Jane Doe';
+
+        $newJson = MarshalJson::serialize($flexibleData);
+
+        $expectedJson = '{"name": "Jane Doe"}';
+
+        $this->assertJsonStringEqualsJsonString($expectedJson, $newJson);
     }
 
     public function mapUser(\stdClass $user) {

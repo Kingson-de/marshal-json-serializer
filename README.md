@@ -77,7 +77,65 @@ $json = MarshalJson::serializeCollectionCallable(function (User $user) {
 
 ### Deserializing / Unmarshalling
 
-TODO
+To transform JSON back to your structure use Marshal's deserialize functions.
+You need a class extending the AbstractObjectMapper which will be passed to the deserializeJson function.
+When using FlexibleData's get function it will throw an OutOfBoundsException if the key does not exist.
+If an exception is not needed the find function can be used which will return a custom default value in that case.
+
+```php
+<?php
+
+use KingsonDe\Marshal\AbstractObjectMapper;
+use KingsonDe\Marshal\Data\FlexibleData;
+
+class UserIdMapper extends AbstractObjectMapper {
+
+    public function map(FlexibleData $flexibleData, ...$additionalData) {
+        return $flexibleData->get('id');
+    }
+}
+```
+
+```php
+<?php
+
+use KingsonDe\Marshal\MarshalJson;
+
+$json = '{"id": 123}';
+
+$id = MarshalJson::deserializeJson($json, new UserIdMapper());
+```
+
+Another option would be to use the deserializeCallable function.
+
+```php
+<?php
+
+use KingsonDe\Marshal\MarshalJson;
+
+$id = MarshalJson::deserializeJsonCallable($json, function (FlexibleData $flexibleData) {
+    return $flexibleData['id'];
+});
+```
+
+### Modify existing JSON
+
+An easy way to modify existing JSON is to use FlexibleData.
+Here is an example:
+
+```php
+<?php
+
+use KingsonDe\Marshal\Data\FlexibleData;
+use KingsonDe\Marshal\MarshalJson;
+
+$json = '{"name": "John Doe"}';
+
+$flexibleData = new FlexibleData(MarshalJson::deserializeJsonToData($json));
+$flexibleData['name'] = 'Jane Doe';
+
+$modifiedJson = MarshalJson::serialize($flexibleData);
+```
 
 ## License
 
